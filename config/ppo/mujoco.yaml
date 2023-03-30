@@ -17,5 +17,5 @@ evaluate_steps: 10000
 gamma: 0.98
 tdlam: 0.95
 
-logdir: "./logs/Walker(1)/ppo/"
-modeldir: "./models/Walker(1)/ppo/"
+logdir: "./logs/Walker(1)Stand/ppo/"
+modeldir: "./models/Walker(1)Stand/ppo/"

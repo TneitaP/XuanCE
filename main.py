@@ -24,7 +24,7 @@ if __name__ == "__main__":
     args = get_args()
     device = args.device
     config = get_config(args.config,args.domain)
-    envs = [NormActionWrapper(BasicWrapper(gym.make("HalfCheetah-v4",render_mode="rgb_array"))) for i in range(config.nenvs)]
+    envs = [NormActionWrapper(BasicWrapper(DMControl("walker","stand",200))) for i in range(config.nenvs)]
     envs = DummyVecEnv(envs)
     envs = RewardNorm(config,envs,train=True)
     envs = ObservationNorm(config,envs,train=True)
