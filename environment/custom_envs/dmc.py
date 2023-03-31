@@ -41,16 +41,18 @@ class DMControl(gym.Env):
             cv2.waitKey(5)
     
     def make_observation(self,timestep_data):
-        return_observation = np.empty((0,),dtype=np.float32)
-        for key,value in zip(timestep_data.observation.keys(),timestep_data.observation.values()):
-            value = np.array([value],np.float32)
-            if len(value.shape) == 1:
-                return_observation=np.concatenate((return_observation,value),axis=-1)
-            elif len(value.shape) == 2:
-                return_observation=np.concatenate((return_observation,value[0]),axis=-1)
-            else:
-                raise NotImplementedError
-        return return_observation
+        # return_observation = np.empty((0,),dtype=np.float32)
+        # for key,value in zip(timestep_data.observation.keys(),timestep_data.observation.values()):
+        #     value = np.array([value],np.float32)
+        #     if len(value.shape) == 1:
+        #         return_observation=np.concatenate((return_observation,value),axis=-1)
+        #     elif len(value.shape) == 2:
+        #         return_observation=np.concatenate((return_observation,value[0]),axis=-1)
+        #     else:
+        #         raise NotImplementedError
+        
+        # return return_observation
+        return np.concatenate([ val.reshape(-1) for key, val in timestep_data.observation.items()]) 
     
     def reset(self):
         self.episode_time = 0
