@@ -101,6 +101,7 @@ class DQN_Agent:
                 train_step = train_step - ((i+1)*evaluate_steps)
             else:
                 train_step = evaluate_steps
+            print("benchmark epoch[%03d | %03d]"%(i, epoch))
             self.train(train_step)
             benchmark_scores.append({'steps':self.train_steps,'scores':self.test(test_episode,render)})
         time_string = time.asctime().replace(":", "_")#.replace(" ", "_")

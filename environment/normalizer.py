@@ -2,7 +2,7 @@ from math import trunc
 from environment import *
 from environment.vectorize import VecEnv
 class RewardNorm(VecEnv):
-    def __init__(self,config,vecenv:VecEnv,scale_range=(0.1,10),reward_range=(-5,5),gamma=0.99,train=True):
+    def __init__(self,config,vecenv:VecEnv,scale_range=(0.1,10),reward_range=(-5,5),gamma=0.99,train=True,pretrain_para_path = None):
         super(RewardNorm,self).__init__(vecenv.num_envs,vecenv.observation_space,vecenv.action_space)
         assert scale_range[0] < scale_range[1], "invalid scale_range."
         assert reward_range[0] < reward_range[1], "Invalid reward_range."
@@ -15,11 +15,13 @@ class RewardNorm(VecEnv):
         self.return_rms = Running_MeanStd({'return':(1,)})
         self.episode_rewards = [[] for i in range(self.num_envs)]
         self.train_steps = 0
-        if train == False:
-            self.load_rms()
+        if pretrain_para_path is not None:
+            self.load_rms(pretrain_para_path)
+        elif train == False:
+            self.load_rms(os.path.join(self.config.modeldir,"reward_stat.npy"))
+        
 
-    def load_rms(self):
-        npy_path = os.path.join(self.config.modeldir,"reward_stat.npy")
+    def load_rms(self, npy_path):
         rms_data = np.load(npy_path,allow_pickle=True).item()
         self.return_rms.count = rms_data['count']
         self.return_rms.mean = rms_data['mean']
@@ -49,7 +51,7 @@ class RewardNorm(VecEnv):
         return self.vecenv.close_extras()
 
 class ObservationNorm(VecEnv):
-    def __init__(self,config,vecenv:VecEnv,scale_range=(0.1,10),obs_range=(-5,5),forbidden_keys=[],train=True):
+    def __init__(self,config,vecenv:VecEnv,scale_range=(0.1,10),obs_range=(-5,5),forbidden_keys=[],train=True,pretrain_para_path = None):
         super(ObservationNorm,self).__init__(vecenv.num_envs,vecenv.observation_space,vecenv.action_space)
         assert scale_range[0] < scale_range[1], "invalid scale_range."
         assert obs_range[0] < obs_range[1], "Invalid reward_range."
@@ -60,11 +62,12 @@ class ObservationNorm(VecEnv):
         self.vecenv = vecenv
         self.obs_rms = Running_MeanStd(space2shape(vecenv.observation_space))
         self.train_steps = 0
-        if train == False:
-            self.load_rms()
+        if pretrain_para_path is not None:
+            self.load_rms(pretrain_para_path)
+        elif train == False:
+            self.load_rms(os.path.join(self.config.modeldir,"observation_stat.npy"))
     
-    def load_rms(self):
-        npy_path = os.path.join(self.config.modeldir,"observation_stat.npy")
+    def load_rms(self, npy_path):
         rms_data = np.load(npy_path,allow_pickle=True).item()
         self.obs_rms.count = rms_data['count']
         self.obs_rms.mean = rms_data['mean']
