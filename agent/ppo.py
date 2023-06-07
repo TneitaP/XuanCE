@@ -103,7 +103,7 @@ class PPO_Agent:
             print("benchmark epoch[%03d | %03d]"%(i, epoch))
             self.train(train_step)
             benchmark_scores.append({'steps':self.train_steps,'scores':self.test(test_episode,render)})
-        time_string = time.asctime().replace(":", "_")#.replace(" ", "_")
+        time_string = get_time_str()
         np.save(self.config.logdir+"benchmark_%s.npy"%time_string, benchmark_scores)
 
     

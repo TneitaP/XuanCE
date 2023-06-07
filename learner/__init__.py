@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import time
 import copy
 import numpy as np
-from utils.common import create_directory
+from utils.common import create_directory, get_time_str
 from torch.utils.tensorboard import SummaryWriter
 
 from .a2c import A2C_Learner

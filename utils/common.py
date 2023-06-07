@@ -4,13 +4,14 @@ import yaml
 import scipy.signal
 import numpy as np
 from argparse import Namespace
+import time
 
-def get_config(dir_name, args_name):
-    with open(os.path.join(dir_name, args_name + ".yaml"), "r") as f:
+def get_config(config_filename):
+    with open(config_filename, "r") as f:
         try:
             config_dict = yaml.load(f, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
-            assert False, args_name + ".yaml error: {}".format(exc)
+            assert False, config_filename + " error: {}".format(exc)
     return Namespace(**config_dict)
 
 
@@ -35,3 +36,6 @@ def combined_shape(length, shape=None):
     if shape is None:
         return (length,)
     return (length, shape) if np.isscalar(shape) else (length, *shape)
+
+def get_time_str():
+    return time.asctime().replace(":", "_").replace(" ", "-")
