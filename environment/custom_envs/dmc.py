@@ -1,13 +1,20 @@
 from environment import *
-from dm_control import suite
+import dm_env
 import gym.spaces
 import cv2
 import gym.core
 class DMControl(gym.Env):
-    def __init__(self,domain_name="humanoid",task_name="stand",timelimit=100,render_mode='rgb_array'):
-        self.domain_name = domain_name
-        self.task_name = task_name
-        self.env = suite.load(domain_name=domain_name,task_name=task_name)
+    def __init__(self, suite_or_self_env:dm_env.Environment, timelimit=100,render_mode='rgb_array'):
+        '''
+        suite env: 
+            from dm_control import suite
+            suite.load(domain_name=domain_name,task_name=task_name)
+        self env: 
+            task define;
+            env define;
+            
+        '''
+        self.env = suite_or_self_env
         self.action_spec = self.env.action_spec()
         self.observation_spec = self.env.observation_spec()
         
@@ -26,7 +33,7 @@ class DMControl(gym.Env):
                 obs_shape_dim += 1
             else:
                 obs_shape_dim += shape[0]
-        return gym.spaces.Box(-np.inf,-np.inf,(obs_shape_dim,))
+        return gym.spaces.Box(-np.inf, np.inf,(obs_shape_dim,))
             
     def make_action_space(self,act_spec):
         return gym.spaces.Box(act_spec.minimum,act_spec.maximum,act_spec.shape)
@@ -52,7 +59,7 @@ class DMControl(gym.Env):
         #         raise NotImplementedError
         
         # return return_observation
-        return np.concatenate([ val.reshape(-1) for key, val in timestep_data.observation.items()]) 
+        return np.concatenate([ val.reshape(-1) for key, val in timestep_data.observation.items()], dtype=np.float32)
     
     def reset(self):
         self.episode_time = 0

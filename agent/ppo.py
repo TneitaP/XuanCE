@@ -73,8 +73,9 @@ class PPO_Agent:
             self.train_steps += 1
 
     def test(self,test_episode=10,render=False):
-        import copy
-        test_environment = copy.deepcopy(self.environment)
+        # import copy
+        # test_environment = copy.deepcopy(self.environment)
+        test_environment = self.environment
         obs,infos = test_environment.reset()
         current_episode = 0
         scores = []

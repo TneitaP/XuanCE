@@ -121,8 +121,8 @@ class DummyVecEnv(VecEnv):
                             zip(self.obs_shape.keys(), self.obs_shape.values())}
         else:
             self.buf_obs = np.zeros(combined_shape(self.num_envs, self.obs_shape), dtype=np.float32)
-        self.buf_dones = np.zeros((self.num_envs,), dtype=np.bool)
-        self.buf_trunctions = np.zeros((self.num_envs,), dtype=np.bool)
+        self.buf_dones = np.zeros((self.num_envs,), dtype=bool)
+        self.buf_trunctions = np.zeros((self.num_envs,), dtype=bool)
         self.buf_rews = np.zeros((self.num_envs,), dtype=np.float32)
         self.buf_infos = [{} for _ in range(self.num_envs)]
         self.actions = None
